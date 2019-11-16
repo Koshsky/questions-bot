@@ -35,9 +35,6 @@ for line in f.readlines():
     answers[count] = line
     count += 1
 f.close()
-print(questions, len(questions))
-print(answers)
-count = 1
 while True:
     messages = vk.method('messages.getConversations', {'offset': 0, 'count': 20, 'filter': 'unread'})
     if messages['count'] > 0:
@@ -45,20 +42,19 @@ while True:
         body = messages['items'][0]['last_message']['text'].lower()  # текст сообщения
         if id in data:
             if body == 'заново':
-                count = 1
-                data[id] = -1
+                data[id]['count'] = 1
+                data[id]['errors'] = -1
                 send(questions[count], id)
-            if count <= len(questions):
-                print(body, answers[count], '\n', answers)
-                if body + '\n' == answers[count]:
-                    count += 1
-                    send('Ответ верный! Следующий вопрос: ' + questions[count], id)
+            if data[id]['count'] <= len(questions):
+                if body + '\n' == answers[data[id]['count']]:
+                    data[id]['count'] += 1
+                    send('Ответ верный! Следующий вопрос: ' + questions[data[id]['count']], id)
                 else:
-                    data[id] += 1
-                    if data[id] > 0:
-                        send('Ответ неверный, вами допущено ' + end_of_word(data[id]), id)
+                    data[id]['errors'] += 1
+                    if data[id]['errors'] > 0:
+                        send('Ответ неверный, вами допущено ' + end_of_word(data[id]['errors']), id)
             else:
-                send('Вы правильно ответили на все вопросы \n ошибок допущено: ' + end_of_word(data[id]) +  ' \n \n чтобы попробовать еще пишите "заново"', id)
+                send('Вы правильно ответили на все вопросы \n ошибок допущено: ' + end_of_word(data[id]['errors']) +  ' \n \n чтобы попробовать еще пишите "заново"', id)
         else:
-            data[id] = 0
+            data[id] = {'count' : 1, 'errors' : 0}
             send('Из какого слова из семи букв можно убрать одну "букву", чтобы осталось две буквы?  \n \n имейте в виду что ответом является строго определенный ответ', id)
