@@ -46,10 +46,11 @@ while True:
                 data[id]['errors'] = -1
                 send(questions[count], id)
             if data[id]['count'] + 1 < len(questions):
-                data[id]['errors'] += 1
                 if body + '\n' == answers[data[id]['count']]:
                     data[id]['count'] += 1
                     send('Ответ верный! Следующий вопрос: ' + questions[data[id]['count']], id)
+                else:
+                    data[id]['errors'] += 1
                 else:
                     if data[id]['errors'] > 0:
                         send('Ответ неверный, вами допущено ' + end_of_word(data[id]['errors']), id)
