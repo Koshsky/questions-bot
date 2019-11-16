@@ -50,9 +50,8 @@ while True:
                     data[id]['count'] += 1
                     send('Ответ верный! Следующий вопрос: ' + questions[data[id]['count']], id)
                 else:
-                    data[id]['errors'] += 1
-                else:
                     if data[id]['errors'] > 0:
+                        data[id]['errors'] += 1
                         send('Ответ неверный, вами допущено ' + end_of_word(data[id]['errors']), id)
             else:
                 send('Вы правильно ответили на все вопросы \n ошибок допущено: ' + end_of_word(data[id]['errors']) +  ' \n \n чтобы попробовать еще пишите "заново"', id)
