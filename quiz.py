@@ -37,7 +37,7 @@ for line in f.readlines():
 f.close()
 while True:
     messages = vk.method('messages.getConversations', {'offset': 0, 'count': 20, 'filter': 'unread'})
-    if messages['count'] > 0:
+    if data[id]['count'] in answers:
         id = messages['items'][0]['last_message']['from_id']  # айди отправителя
         body = messages['items'][0]['last_message']['text'].lower()  # текст сообщения
         if id in data:
