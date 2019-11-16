@@ -37,7 +37,7 @@ for line in f.readlines():
 f.close()
 while True:
     messages = vk.method('messages.getConversations', {'offset': 0, 'count': 20, 'filter': 'unread'})
-    if data[id]['count'] in answers:
+    if messages['count'] > 0:
         id = messages['items'][0]['last_message']['from_id']  # айди отправителя
         body = messages['items'][0]['last_message']['text'].lower()  # текст сообщения
         if id in data:
@@ -45,12 +45,12 @@ while True:
                 data[id]['count'] = 1
                 data[id]['errors'] = -1
                 send(questions[count], id)
-            if data[id]['count'] < len(questions):
+            if data[id]['count'] + 1 < len(questions):
+                data[id]['errors'] += 1
                 if body + '\n' == answers[data[id]['count']]:
                     data[id]['count'] += 1
                     send('Ответ верный! Следующий вопрос: ' + questions[data[id]['count']], id)
                 else:
-                    data[id]['errors'] += 1
                     if data[id]['errors'] > 0:
                         send('Ответ неверный, вами допущено ' + end_of_word(data[id]['errors']), id)
             else:
